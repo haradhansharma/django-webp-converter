@@ -24,6 +24,16 @@ class WebPImage(models.Model):
         The full image file path found from the static path
         """
         full_image_path = finders.find(self.static_path)
+        
+        # To serve media file added statically outside of static directory
+        #example:
+        #   project
+        #       static
+        #       media
+        # Like "{% static_webp 'media/site_images/1.png' %}"
+        if full_image_path is None:
+            full_image_path = str(self.static_path)
+            
         if not full_image_path:
             raise IOError("Can't find static image.")
         return full_image_path
